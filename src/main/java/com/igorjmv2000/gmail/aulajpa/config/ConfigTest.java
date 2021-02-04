@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 
-import com.igorjmv2000.gmail.aulajpa.domain.dto.ClientDTO;
-import com.igorjmv2000.gmail.aulajpa.domain.dto.OrderItemDTO;
 import com.igorjmv2000.gmail.aulajpa.services.CategoryService;
 import com.igorjmv2000.gmail.aulajpa.services.ClientService;
 import com.igorjmv2000.gmail.aulajpa.services.OrderItemService;
