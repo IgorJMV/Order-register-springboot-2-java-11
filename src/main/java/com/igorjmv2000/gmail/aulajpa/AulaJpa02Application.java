@@ -9,7 +9,7 @@ import com.igorjmv2000.gmail.aulajpa.gui.start.StartGui;
 public class AulaJpa02Application {
 
 	public static void main(String[] args) {
-		//SpringApplication.run(AulaJpa02Application.class, args);
+		SpringApplication.run(AulaJpa02Application.class, args);
 		StartGui.initialize(args);
 	}
 

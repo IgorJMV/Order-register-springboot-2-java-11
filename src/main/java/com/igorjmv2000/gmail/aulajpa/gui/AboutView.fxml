@@ -68,7 +68,7 @@
          <children>
             <HBox spacing="100.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sistema criado com o objetivo de aprendizado.&#10;Principais ferramentas:&#10;- Springboot 2.x.x&#10;- JavaFX 15&#10;Versão da linguagem: Java 11 LTS" wrappingWidth="255.80743408203125" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sistema criado com o objetivo de aprendizado.&#10;Principais ferramentas:&#10;- Springboot 2.x.x&#10;- Spring-data-jpa&#10;- Maven&#10;- JavaFX 15&#10;Versão da linguagem: Java 11 LTS" wrappingWidth="255.80743408203125" />
                   <VBox>
                      <children>
                         <Label text="Sistema de cadastro de pedidos">
@@ -78,7 +78,7 @@
                         </Label>
                         <Label text="Versão: v1.0" textAlignment="RIGHT" />
                         <Label text="Autor: Igor José Marinho Vieira" />
-                        <Label text="Compilado em: 04/02/2021 16:03" />
+                        <Label text="Compilado em: 04/02/2021 17:10" />
                      </children>
                   </VBox>
                </children>

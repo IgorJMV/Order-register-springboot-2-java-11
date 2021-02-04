@@ -8,21 +8,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
-public class AboutViewController implements Initializable{
+public class OrderViewController implements Initializable{
 	private Node leadingUpNode;
-	private MenuItem menuItemAbout;
-
-    @FXML private Button buttonBack;
+	
+    @FXML
+    private Button buttonBack;
 
     @FXML
     void onButtonBackAction(ActionEvent event) {
-    	menuItemAbout.setDisable(false);
-    	
     	BorderPane root = ((BorderPane)buttonBack.getParent().getParent().getParent());
     	root.getChildren().remove(1);
     	root.setCenter(leadingUpNode);
@@ -30,10 +27,6 @@ public class AboutViewController implements Initializable{
     
     public void setLeadingUpNode(Node node) {
     	leadingUpNode = node;
-    }
-    
-    public void setMenuItemAbout(MenuItem menuItem) {
-    	menuItemAbout = menuItem;
     }
 
 	@Override
