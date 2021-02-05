@@ -2,7 +2,9 @@ package com.igorjmv2000.gmail.aulajpa.gui;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import com.igorjmv2000.gmail.aulajpa.config.ConfigTest;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.ClientDTO;
@@ -94,12 +96,30 @@ public class ClientViewController implements Initializable{
 		//Selected object
 		tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> updateSelectedObject(event));
 		tableView.addEventFilter(KeyEvent.KEY_RELEASED, event -> updateSelectedObject(event));
-	}
+	
+		//button initial config
+		buttonRemove.setDisable(true);
+		buttonUpdate.setDisable(true);
+		
+		//search
+		textFieldSearch.textProperty().addListener((obs, oldVal, newVal) -> {
+			List<ClientDTO> oldList;
+			if(tableView.getItems().isEmpty() || newVal.length() < oldVal.length()) {
+				oldList = clientService.findAll();
+			}else {
+				oldList = tableView.getItems().stream().collect(Collectors.toList());
+			}
+			List<ClientDTO> newList = oldList.stream().filter(x -> x.getName().toUpperCase().contains(newVal.toUpperCase())).collect(Collectors.toList());
+			tableView.setItems(FXCollections.observableArrayList(newList));
+		});
+    }
     
     private void updateSelectedObject(Event event) {
 		try {
 			selectedObject = tableView.getSelectionModel().getSelectedItem();
 			textFieldSelectedObject.setText(selectedObject.getName());
+			buttonRemove.setDisable(false);
+			buttonUpdate.setDisable(false);
 		}catch(NullPointerException e) {
 			textFieldSelectedObject.clear();
 		}
