@@ -18,23 +18,57 @@ public class ConfigTest implements CommandLineRunner{
 	@Autowired
 	private ClientService clientService;
 	
+	private static ClientService staticClientService;
+	
 	@Autowired
 	private ProductService productService;
+	
+	private static ProductService staticProductService;
 	
 	@Autowired
 	private CategoryService categoryService;
 	
+	private static CategoryService staticCategoryService;
+	
 	@Autowired
 	private OrderService orderService;
 	
+	private static OrderService staticOrderService;
+	
 	@Autowired
 	private OrderItemService orderItemService;
+	
+	private static OrderItemService staticOrderItemService;
 	
 	@Override
 	public void run(String... args) throws Exception {
 		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		
-		
+		staticClientService = clientService;
+		staticProductService = productService;
+		staticCategoryService = categoryService;
+		staticOrderService = orderService;
+		staticOrderItemService = orderItemService;
+	}
+
+	public static ClientService getStaticClientService() {
+		return staticClientService;
+	}
+
+	public static ProductService getStaticProductService() {
+		return staticProductService;
+	}
+
+	public static CategoryService getStaticCategoryService() {
+		return staticCategoryService;
+	}
+
+	public static OrderService getStaticOrderService() {
+		return staticOrderService;
+	}
+
+	public static OrderItemService getStaticOrderItemService() {
+		return staticOrderItemService;
 	}
 
 }

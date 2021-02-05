@@ -1,6 +1,8 @@
 package com.igorjmv2000.gmail.aulajpa.services;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,21 @@ public class ProductService {
 		}catch(NoSuchElementException e) {
 			throw new ObjectNotFoundException("product not found. Id: " + id);
 		}
+	}
+	
+	public List<ProductDTO> findAll(){
+		List<Product> entities = productRepository.findAll();
+		List<ProductDTO> dtos = entities.stream().map(x -> new ProductDTO(x)).collect(Collectors.toList());
+		int i = 0;
+		for(Product p : entities) {
+			Set<CategoryDTO> categories = p.getCategories().stream().map(x -> new CategoryDTO(x)).collect(Collectors.toSet());
+			Set<OrderItemDTO> items = p.getItems().stream().map(x -> new OrderItemDTO(x)).collect(Collectors.toSet());
+			dtos.get(i).getCategories().addAll(categories);
+			dtos.get(i).getItems().addAll(items);
+			i++;
+		}
+		
+		return dtos;
 	}
 	
 	public void deleteById(Integer id) {

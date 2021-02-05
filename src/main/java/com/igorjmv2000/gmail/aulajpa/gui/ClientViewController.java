@@ -1,8 +1,16 @@
 package com.igorjmv2000.gmail.aulajpa.gui;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 
+import com.igorjmv2000.gmail.aulajpa.config.ConfigTest;
+import com.igorjmv2000.gmail.aulajpa.domain.dto.ClientDTO;
+import com.igorjmv2000.gmail.aulajpa.domain.enums.Genre;
+import com.igorjmv2000.gmail.aulajpa.services.ClientService;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,12 +19,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
 public class ClientViewController implements Initializable{
 	private Node leadingUpNode;
+	private ClientService clientService = ConfigTest.getStaticClientService();
 	
     @FXML private Button buttonBack;
 
@@ -27,11 +37,11 @@ public class ClientViewController implements Initializable{
     @FXML private Button buttonUpdate;
     @FXML private Button buttonRemove;
 
-    @FXML private TableView<?> tableView;
-    @FXML private TableColumn<?, ?> tableColumnId;
-    @FXML private TableColumn<?, ?> tableColumnName;
-    @FXML private TableColumn<?, ?> tableColumnBirthDate;
-    @FXML private TableColumn<?, ?> tableColumnGenre;
+    @FXML private TableView<ClientDTO> tableView;
+    @FXML private TableColumn<ClientDTO, Integer> tableColumnId;
+    @FXML private TableColumn<ClientDTO, String> tableColumnName;
+    @FXML private TableColumn<ClientDTO, Date> tableColumnBirthDate;
+    @FXML private TableColumn<ClientDTO, Genre> tableColumnGenre;
 
     @FXML
     void onButtonBackAction(ActionEvent event) {
@@ -66,6 +76,16 @@ public class ClientViewController implements Initializable{
 		Image img = new Image(path + "\\Back.png");
 		ImageView imgView = new ImageView(img);
 		buttonBack.setGraphic(imgView);
+		
+		//TableConfig
+		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		tableColumnBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+		tableColumnGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
+		
+		//Initial charge
+		ObservableList<ClientDTO> obsList = FXCollections.observableArrayList(clientService.findAll());
+		tableView.setItems(obsList);
 	}
 
 }

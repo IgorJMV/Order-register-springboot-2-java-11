@@ -1,5 +1,6 @@
 package com.igorjmv2000.gmail.aulajpa.services;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,19 @@ public class ClientService {
 		}catch(NoSuchElementException e) {
 			throw new ObjectNotFoundException("client not found. Id: " + id);
 		}
+	}
+	
+	public List<ClientDTO> findAll(){
+		List<Client> entities = clientRepository.findAll();
+		List<ClientDTO> dtos = entities.stream().map(x -> new ClientDTO(x)).collect(Collectors.toList());
+		int i = 0;
+		for(Client c : entities) {
+			List<OrderDTO> orders = c.getOrders().stream().map(x -> new OrderDTO(x)).collect(Collectors.toList());
+			dtos.get(i).getOrders().addAll(orders);
+			i++;
+		}
+		
+		return dtos;
 	}
 	
 	public void deleteById(Integer id) {

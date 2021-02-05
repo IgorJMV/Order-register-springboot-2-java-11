@@ -3,6 +3,13 @@ package com.igorjmv2000.gmail.aulajpa.gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.igorjmv2000.gmail.aulajpa.config.ConfigTest;
+import com.igorjmv2000.gmail.aulajpa.domain.dto.CategoryDTO;
+import com.igorjmv2000.gmail.aulajpa.domain.dto.ProductDTO;
+import com.igorjmv2000.gmail.aulajpa.services.CategoryService;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,13 +19,16 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
 public class CategoryViewController implements Initializable{
 	private Node leadingUpNode;
-
+	
+	private CategoryService categoryService = ConfigTest.getStaticCategoryService();
+	
     @FXML private Button buttonBack;
 
     @FXML private TextField textFieldSelectedObject;
@@ -28,11 +38,11 @@ public class CategoryViewController implements Initializable{
     @FXML private Button buttonUpdate;
     @FXML private Button buttonRemove;
 
-    @FXML private TableView<?> tableView;
-    @FXML private TableColumn<?, ?> tableColumnId;
-    @FXML private TableColumn<?, ?> tableColumnDescription;
+    @FXML private TableView<CategoryDTO> tableView;
+    @FXML private TableColumn<CategoryDTO, Integer> tableColumnId;
+    @FXML private TableColumn<CategoryDTO, String> tableColumnDescription;
 
-    @FXML private ListView<?> listView;
+    @FXML private ListView<ProductDTO> listView;
 
     @FXML
     void onButtonBackAction(ActionEvent event) {
@@ -43,7 +53,7 @@ public class CategoryViewController implements Initializable{
 
     @FXML
     void onButtonRegisterAction(ActionEvent event) {
-
+    	
     }
 
     @FXML
@@ -67,6 +77,14 @@ public class CategoryViewController implements Initializable{
 		Image img = new Image(path + "\\Back.png");
 		ImageView imgView = new ImageView(img);
 		buttonBack.setGraphic(imgView);
+		
+		//table config
+		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+		tableColumnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+		
+		//initial charge
+		ObservableList<CategoryDTO> obsList = FXCollections.observableArrayList(categoryService.findAll());
+		tableView.setItems(obsList);
 	}
 
 }

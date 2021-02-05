@@ -1,6 +1,8 @@
 package com.igorjmv2000.gmail.aulajpa.services;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,18 @@ public class CategoryService {
 		}catch(NoSuchElementException e) {
 			throw new ObjectNotFoundException("category not found. Id: " + id);
 		}
+	}
+	
+	public List<CategoryDTO> findAll(){
+		List<Category> entities = categoryRepository.findAll();
+		List<CategoryDTO> dtos = entities.stream().map(x -> new CategoryDTO(x)).collect(Collectors.toList());
+		int i = 0;
+		for(Category c : entities) {
+			Set<ProductDTO> products = c.getProducts().stream().map(x -> new ProductDTO(x)).collect(Collectors.toSet());
+			dtos.get(i).getProducts().addAll(products);
+			i++;
+		}
+		return dtos;
 	}
 	
 	public void deleteById(Integer id) {
