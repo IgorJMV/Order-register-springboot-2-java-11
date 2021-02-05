@@ -38,7 +38,7 @@
             </Label>
          </children>
       </FlowPane>
-      <BorderPane layoutX="204.0" prefHeight="65.0" prefWidth="246.0" style="-fx-background-color: blue;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <BorderPane layoutX="204.0" prefHeight="66.0" prefWidth="246.0" style="-fx-background-color: blue;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <effect>
             <Lighting diffuseConstant="0.78" specularConstant="0.43" specularExponent="27.48" surfaceScale="0.85">
                <bumpInput>
