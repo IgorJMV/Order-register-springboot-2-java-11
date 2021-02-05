@@ -1,5 +1,6 @@
 package com.igorjmv2000.gmail.aulajpa.gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -15,8 +16,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
@@ -28,6 +31,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class CategoryViewController implements Initializable{
 	private Node leadingUpNode;
@@ -58,7 +63,7 @@ public class CategoryViewController implements Initializable{
 
     @FXML
     void onButtonRegisterAction(ActionEvent event) {
-    	
+    	openNewModalView("CategoryRegisterView.fxml", event);
     }
 
     @FXML
@@ -68,11 +73,41 @@ public class CategoryViewController implements Initializable{
 
     @FXML
     void onButtonUpdateAction(ActionEvent event) {
-
+    	openNewModalView("CategoryRegisterView.fxml", event);
     }
     
     public void setLeadingUpNode(Node node) {
     	leadingUpNode = node;
+    }
+    
+    private void openNewModalView(String name, ActionEvent event) {
+    	try {
+    		FXMLLoader loader = new FXMLLoader(getClass().getResource(name));
+    		BorderPane root = loader.load();    		
+    		Scene scene = new Scene(root);
+    		Stage stage = new Stage();
+    		stage.setScene(scene);
+    		
+    		CategoryRegisterViewController controller = (CategoryRegisterViewController)loader.getController();
+    		if(event.getSource().equals(buttonRegister)) {
+    			controller.setRegister(true);
+    			stage.setTitle("Registrar nova categoria");
+    		}else if(event.getSource().equals(buttonUpdate)) {
+    			controller.setRegister(false);
+    			stage.setTitle("Atualizar categoria");
+    			
+    			//set selectedObject
+    			controller.getTextFieldId().setText(String.valueOf(selectedObject.getId()));
+    			controller.getTextFieldDescription().setText(selectedObject.getDescription());
+    		}
+    		
+    		stage.initOwner(buttonRegister.getParent().getScene().getWindow());
+    		stage.initModality(Modality.APPLICATION_MODAL);
+    		stage.setResizable(false);
+    		stage.showAndWait();
+    	}catch(IOException e) {
+    		e.printStackTrace();
+    	}
     }
     
     @Override

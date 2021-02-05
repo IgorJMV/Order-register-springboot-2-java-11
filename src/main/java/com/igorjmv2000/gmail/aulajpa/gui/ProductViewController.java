@@ -1,5 +1,6 @@
 package com.igorjmv2000.gmail.aulajpa.gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -15,8 +16,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
@@ -28,6 +31,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class ProductViewController implements Initializable{
 	private Node leadingUpNode;
@@ -59,7 +64,7 @@ public class ProductViewController implements Initializable{
 
     @FXML
     void onButtonRegisterAction(ActionEvent event) {
-
+    	openNewModalView("ProductRegisterView.fxml", event);
     }
 
     @FXML
@@ -69,11 +74,43 @@ public class ProductViewController implements Initializable{
 
     @FXML
     void onButtonUpdateAction(ActionEvent event) {
-
+    	openNewModalView("ProductRegisterView.fxml", event);
     }
     
     public void setLeadingUpNode(Node node) {
     	leadingUpNode = node;
+    }
+    
+    private void openNewModalView(String name, ActionEvent event) {
+    	try {
+    		FXMLLoader loader = new FXMLLoader(getClass().getResource(name));
+    		BorderPane root = loader.load();    		
+    		Scene scene = new Scene(root);
+    		Stage stage = new Stage();
+    		stage.setScene(scene);
+    		
+    		ProductRegisterViewController controller = (ProductRegisterViewController)loader.getController();
+    		if(event.getSource().equals(buttonRegister)) {
+    			controller.setRegister(true);
+    			stage.setTitle("Registrar novo produto");
+    		}else if(event.getSource().equals(buttonUpdate)) {
+    			controller.setRegister(false);
+    			stage.setTitle("Atualizar produto");
+    			
+    			//set selectedObject
+    			controller.getTextFieldId().setText(String.valueOf(selectedObject.getId()));
+    			controller.getTextFieldName().setText(selectedObject.getName());
+    			controller.getTextFieldPrice().setText(String.valueOf(selectedObject.getPrice()));
+    			//TODO
+    		}
+    		
+    		stage.initOwner(buttonRegister.getParent().getScene().getWindow());
+    		stage.initModality(Modality.APPLICATION_MODAL);
+    		stage.setResizable(false);
+    		stage.showAndWait();
+    	}catch(IOException e) {
+    		e.printStackTrace();
+    	}
     }
     
     @Override
