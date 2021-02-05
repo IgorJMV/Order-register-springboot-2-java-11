@@ -11,6 +11,7 @@ import com.igorjmv2000.gmail.aulajpa.services.CategoryService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -22,12 +23,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 public class CategoryViewController implements Initializable{
 	private Node leadingUpNode;
-	
 	private CategoryService categoryService = ConfigTest.getStaticCategoryService();
+	private CategoryDTO selectedObject;
 	
     @FXML private Button buttonBack;
 
@@ -85,6 +88,19 @@ public class CategoryViewController implements Initializable{
 		//initial charge
 		ObservableList<CategoryDTO> obsList = FXCollections.observableArrayList(categoryService.findAll());
 		tableView.setItems(obsList);
+		
+		//Selected object
+		tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> updateSelectedObject(event));
+		tableView.addEventFilter(KeyEvent.KEY_RELEASED, event -> updateSelectedObject(event));
+    }
+
+	private void updateSelectedObject(Event event) {
+		try {
+			selectedObject = tableView.getSelectionModel().getSelectedItem();
+			textFieldSelectedObject.setText(selectedObject.getDescription());
+		}catch(NullPointerException e) {
+			textFieldSelectedObject.clear();
+		}
 	}
 
 }

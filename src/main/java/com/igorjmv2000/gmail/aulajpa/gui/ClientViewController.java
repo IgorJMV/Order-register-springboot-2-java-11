@@ -12,6 +12,7 @@ import com.igorjmv2000.gmail.aulajpa.services.ClientService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -22,11 +23,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 public class ClientViewController implements Initializable{
 	private Node leadingUpNode;
 	private ClientService clientService = ConfigTest.getStaticClientService();
+	private ClientDTO selectedObject;
 	
     @FXML private Button buttonBack;
 
@@ -86,6 +90,19 @@ public class ClientViewController implements Initializable{
 		//Initial charge
 		ObservableList<ClientDTO> obsList = FXCollections.observableArrayList(clientService.findAll());
 		tableView.setItems(obsList);
+		
+		//Selected object
+		tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> updateSelectedObject(event));
+		tableView.addEventFilter(KeyEvent.KEY_RELEASED, event -> updateSelectedObject(event));
+	}
+    
+    private void updateSelectedObject(Event event) {
+		try {
+			selectedObject = tableView.getSelectionModel().getSelectedItem();
+			textFieldSelectedObject.setText(selectedObject.getName());
+		}catch(NullPointerException e) {
+			textFieldSelectedObject.clear();
+		}
 	}
 
 }
