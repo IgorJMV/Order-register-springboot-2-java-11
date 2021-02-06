@@ -110,6 +110,6 @@ public class ProductDTO implements Serializable{
 	
 	@Override
 	public String toString() {
-		return id + ", " + name + ", R$" + String.format("%.2f", price);
+		return name.get() + " (R$" + String.format("%.2f", price.get()) + ")";
 	}
 }

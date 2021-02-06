@@ -10,6 +10,7 @@ import com.igorjmv2000.gmail.aulajpa.config.ConfigTest;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.CategoryDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.ProductDTO;
 import com.igorjmv2000.gmail.aulajpa.services.CategoryService;
+import com.igorjmv2000.gmail.aulajpa.services.exceptions.ObjectAssociationException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +21,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
@@ -68,7 +71,18 @@ public class CategoryViewController implements Initializable{
 
     @FXML
     void onButtonRemoveAction(ActionEvent event) {
-
+    	try {
+    		categoryService.deleteById(selectedObject.getId());
+    		refreshTable();
+    	}catch(ObjectAssociationException e) {
+    		Alert alert = new Alert(AlertType.INFORMATION);
+    		alert.setTitle("Ação descontinuada");
+    		alert.setHeaderText("Impossível deleter uma categoria que contenha produtos!");
+    		alert.setContentText("A seguinte categoria não foi removida: \n"
+    				+ "		Id: " + selectedObject.getId() + "\n"
+    				+ "		Descrição: " + selectedObject.getDescription());
+    		alert.showAndWait();
+    	}
     }
 
     @FXML
@@ -159,6 +173,10 @@ public class CategoryViewController implements Initializable{
 			textFieldSelectedObject.setText(selectedObject.getDescription());
 			buttonRemove.setDisable(false);
 			buttonUpdate.setDisable(false);
+			
+			//listView config
+			ObservableList<ProductDTO> products = FXCollections.observableArrayList(selectedObject.getProducts());
+			listView.setItems(products);
 		}catch(NullPointerException e) {
 			textFieldSelectedObject.clear();
 		}
