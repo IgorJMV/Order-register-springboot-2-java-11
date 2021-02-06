@@ -84,7 +84,7 @@
                               <FlowPane alignment="CENTER_LEFT" prefWidth="227.0">
                                  <children>
                                     <Label text="Busca por:" />
-                                    <RadioButton mnemonicParsing="false" text="Id">
+                                    <RadioButton fx:id="radioButtonId" mnemonicParsing="false" onAction="#onRadioButtonsCommit" text="Id">
                                        <FlowPane.margin>
                                           <Insets left="8.0" />
                                        </FlowPane.margin>
@@ -92,7 +92,7 @@
                                           <ToggleGroup fx:id="radioGroup" />
                                        </toggleGroup>
                                     </RadioButton>
-                                    <RadioButton mnemonicParsing="false" selected="true" text="Cliente" toggleGroup="$radioGroup">
+                                    <RadioButton fx:id="radioButtonClient" mnemonicParsing="false" onAction="#onRadioButtonsCommit" selected="true" text="Cliente" toggleGroup="$radioGroup">
                                        <FlowPane.margin>
                                           <Insets left="10.0" />
                                        </FlowPane.margin>
@@ -102,7 +102,7 @@
                                     <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
                                  </padding>
                               </FlowPane>
-                              <TextField prefHeight="26.0" prefWidth="168.0" promptText="Buscar">
+                              <TextField fx:id="textFieldSearch" prefHeight="26.0" prefWidth="168.0" promptText="Buscar por cliente">
                                  <VBox.margin>
                                     <Insets left="8.0" />
                                  </VBox.margin>
@@ -111,7 +111,7 @@
                         </VBox>
                         <VBox spacing="8.0">
                            <children>
-                              <CheckBox mnemonicParsing="false" text="Filtrar por intervalo de tempo" />
+                              <CheckBox fx:id="checkBoxTimeFilter" mnemonicParsing="false" text="Filtrar por intervalo de tempo" />
                               <FlowPane prefWidth="322.0">
                                  <children>
                                     <Label text="De">
@@ -119,7 +119,7 @@
                                           <Insets top="8.0" />
                                        </padding>
                                     </Label>
-                                    <DatePicker disable="true" prefHeight="26.0" prefWidth="130.0">
+                                    <DatePicker fx:id="datePickerInitial" disable="true" prefHeight="26.0" prefWidth="130.0">
                                        <FlowPane.margin>
                                           <Insets left="8.0" top="8.0" />
                                        </FlowPane.margin>
@@ -129,7 +129,7 @@
                                           <Insets left="8.0" top="8.0" />
                                        </FlowPane.margin>
                                     </Label>
-                                    <DatePicker disable="true" prefHeight="26.0" prefWidth="130.0">
+                                    <DatePicker fx:id="datePickerFinal" disable="true" prefHeight="26.0" prefWidth="130.0">
                                        <FlowPane.margin>
                                           <Insets left="8.0" top="8.0" />
                                        </FlowPane.margin>
@@ -146,22 +146,22 @@
                               <Insets bottom="8.0" left="15.0" right="8.0" top="8.0" />
                            </padding>
                            <children>
-                              <CheckBox mnemonicParsing="false" text="Filtrar por status" />
-                              <ComboBox disable="true" prefWidth="150.0" />
+                              <CheckBox fx:id="checkBoxStatusFilter" mnemonicParsing="false" text="Filtrar por status" />
+                              <ComboBox fx:id="checkBoxStatus" disable="true" prefWidth="150.0" />
                            </children>
                         </VBox>
                      </children>
                   </HBox>
                </content>
             </TitledPane>
-            <TitledPane text="Opções">
+            <TitledPane expanded="false" text="Opções">
                <content>
                   <HBox>
                      <children>
                         <VBox prefWidth="140.0" spacing="8.0">
                            <children>
                               <Label text="Registrar novo pedido:" />
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Registrar" />
+                              <Button fx:id="buttonRegister" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onButtonRegisterAction" text="Registrar" />
                            </children>
                            <padding>
                               <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
@@ -173,7 +173,7 @@
                            </padding>
                            <children>
                               <Label text="Atualizar pedido:" />
-                              <Button disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Atualizar" />
+                              <Button fx:id="buttonUpdate" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onButtonUpdateAction" text="Atualizar" />
                            </children>
                         </VBox>
                         <VBox prefWidth="140.0" spacing="8.0">
@@ -182,7 +182,7 @@
                            </padding>
                            <children>
                               <Label text="Remover pedido:" />
-                              <Button disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Remover" />
+                              <Button fx:id="buttonRemove" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onButtonRemoveAction" text="Remover" />
                            </children>
                         </VBox>
                         <VBox prefHeight="69.0" prefWidth="180.0" spacing="8.0">
@@ -191,7 +191,7 @@
                            </padding>
                            <children>
                               <Label text="Pedido selecionado:" />
-                              <TextField alignment="CENTER" promptText="Pedido Selecionado" />
+                              <TextField fx:id="textFieldSelectedObject" alignment="CENTER" promptText="Pedido Selecionado" />
                            </children>
                         </VBox>
                      </children>
@@ -200,12 +200,12 @@
             </TitledPane>
             <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <content>
-                  <TableView prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn prefWidth="75.0" text="Id" />
-                      <TableColumn prefWidth="75.0" text="Momento" />
-                        <TableColumn prefWidth="75.0" text="Status" />
-                        <TableColumn prefWidth="75.0" text="Cliente" />
+                      <TableColumn fx:id="tableColumnId" prefWidth="75.0" text="Id" />
+                      <TableColumn fx:id="tableColumnMoment" prefWidth="75.0" text="Momento" />
+                        <TableColumn fx:id="tableColumnStatus" prefWidth="75.0" text="Status" />
+                        <TableColumn fx:id="tableColumnClient" prefWidth="75.0" text="Cliente" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

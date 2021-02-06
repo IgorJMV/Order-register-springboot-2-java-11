@@ -1,6 +1,8 @@
 package com.igorjmv2000.gmail.aulajpa.services;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,18 @@ public class OrderService {
 		}catch(NoSuchElementException e) {
 			throw new ObjectNotFoundException("order not found. Id: " + id);
 		}
+	}
+	
+	public List<OrderDTO> findAll(){
+		List<Order> entities = orderRepository.findAll();
+		List<OrderDTO> dtos = entities.stream().map(x -> new OrderDTO(x)).collect(Collectors.toList());
+		int i = 0;
+		for(Order o : entities) {
+			Set<OrderItemDTO> items = o.getItems().stream().map(x -> new OrderItemDTO(x)).collect(Collectors.toSet());
+			dtos.get(i).getItems().addAll(items);
+			i++;
+		}
+		return dtos;
 	}
 	
 	public void deleteById(Integer id) {
