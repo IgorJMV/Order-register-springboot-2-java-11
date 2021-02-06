@@ -62,7 +62,7 @@
                <children>
                   <Label text="Id:" />
                   <Label text="Nome:" GridPane.rowIndex="1" />
-                  <TextField fx:id="textFieldId" editable="false" focusTraversable="false" GridPane.columnIndex="1">
+                  <TextField fx:id="textFieldId" editable="false" focusTraversable="false" promptText="Id automático" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets left="8.0" />
                      </GridPane.margin>
