@@ -104,10 +104,17 @@ public class CategoryViewController implements Initializable{
     		stage.initOwner(buttonRegister.getParent().getScene().getWindow());
     		stage.initModality(Modality.APPLICATION_MODAL);
     		stage.setResizable(false);
+    		stage.setOnHiding(e -> refreshTable());
     		stage.showAndWait();
     	}catch(IOException e) {
     		e.printStackTrace();
     	}
+    }
+    
+    private void refreshTable() {
+    	ObservableList<CategoryDTO> obsList = FXCollections.observableArrayList(categoryService.findAll());
+		tableView.setItems(obsList);
+		tableView.refresh();
     }
     
     @Override
@@ -123,8 +130,7 @@ public class CategoryViewController implements Initializable{
 		tableColumnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
 		
 		//initial charge
-		ObservableList<CategoryDTO> obsList = FXCollections.observableArrayList(categoryService.findAll());
-		tableView.setItems(obsList);
+		refreshTable();
 		
 		//Selected object
 		tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> updateSelectedObject(event));

@@ -101,16 +101,24 @@ public class ProductViewController implements Initializable{
     			controller.getTextFieldId().setText(String.valueOf(selectedObject.getId()));
     			controller.getTextFieldName().setText(selectedObject.getName());
     			controller.getTextFieldPrice().setText(String.valueOf(selectedObject.getPrice()));
-    			//TODO
+    			controller.getCategories().addAll(selectedObject.getCategories().stream().collect(Collectors.toList()));
+    			controller.refreshTable();
     		}
     		
     		stage.initOwner(buttonRegister.getParent().getScene().getWindow());
     		stage.initModality(Modality.APPLICATION_MODAL);
     		stage.setResizable(false);
+    		stage.setOnHiding(e -> refreshTable());
     		stage.showAndWait();
     	}catch(IOException e) {
     		e.printStackTrace();
     	}
+    }
+    
+    private void refreshTable() {
+    	ObservableList<ProductDTO> obsList = FXCollections.observableArrayList(productService.findAll());
+		tableView.setItems(obsList);
+		tableView.refresh();
     }
     
     @Override
@@ -127,8 +135,7 @@ public class ProductViewController implements Initializable{
 		tableColumnPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
 		
 		//initial charge
-		ObservableList<ProductDTO> obsList = FXCollections.observableArrayList(productService.findAll());
-		tableView.setItems(obsList);
+		refreshTable();
 		
 		//Selected object
 		tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> updateSelectedObject(event));

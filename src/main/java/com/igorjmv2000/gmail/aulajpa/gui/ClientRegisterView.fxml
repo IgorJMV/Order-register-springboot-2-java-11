@@ -71,7 +71,7 @@
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Label fx:id="labelNameError" text="Error" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Label fx:id="labelNameError" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="8.0" />
                      </GridPane.margin>
@@ -88,6 +88,11 @@
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </ComboBox>
+                  <Label fx:id="labelBirthDateError" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets left="8.0" />
+                     </GridPane.margin>
+                  </Label>
                </children>
             </GridPane>
             <ButtonBar prefHeight="40.0" prefWidth="200.0">

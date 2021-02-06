@@ -105,15 +105,24 @@ public class ClientViewController implements Initializable{
     			
     			LocalDate localDate = Instant.ofEpochMilli(selectedObject.getBirthDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
     			controller.getDatePicker().setValue(localDate);
+    			
+    			controller.getComboBoxGenre().getSelectionModel().clearAndSelect(selectedObject.getGenre().getCod()-1);
     		}
     		
     		stage.initOwner(buttonRegister.getParent().getScene().getWindow());
     		stage.initModality(Modality.APPLICATION_MODAL);
     		stage.setResizable(false);
+    		stage.setOnHiding(e -> refreshTable());
     		stage.showAndWait();
     	}catch(IOException e) {
     		e.printStackTrace();
     	}
+    }
+    
+    private void refreshTable() {
+    	ObservableList<ClientDTO> obsList = FXCollections.observableArrayList(clientService.findAll());
+		tableView.setItems(obsList);
+		tableView.refresh();
     }
     
     @Override
@@ -131,8 +140,7 @@ public class ClientViewController implements Initializable{
 		tableColumnGenre.setCellValueFactory(new PropertyValueFactory<>("genre"));
 		
 		//Initial charge
-		ObservableList<ClientDTO> obsList = FXCollections.observableArrayList(clientService.findAll());
-		tableView.setItems(obsList);
+		refreshTable();
 		
 		//Selected object
 		tableView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> updateSelectedObject(event));

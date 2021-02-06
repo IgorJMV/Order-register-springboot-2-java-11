@@ -32,8 +32,11 @@ public class ProductService {
 	public ProductDTO update(Integer id, ProductDTO dto) {
 		findById(id);
 		Product entity = productRepository.findById(id).get();
+		entity.getCategories().clear();
 		entity.setName(dto.getName());
 		entity.setPrice(dto.getPrice());
+		entity.getCategories().addAll(dto.getCategories().stream().map(x -> CategoryService.fromEntity(x)).collect(Collectors.toSet()));
+		entity.getItems().addAll(dto.getItems().stream().map(x -> OrderItemService.fromEntity(x)).collect(Collectors.toSet()));
 		entity = productRepository.save(entity);
 		dto = new ProductDTO(entity);
 		dto.getItems().addAll(entity.getItems().stream().map(x -> new OrderItemDTO(x)).collect(Collectors.toSet()));

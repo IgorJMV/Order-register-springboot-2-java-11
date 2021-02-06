@@ -20,7 +20,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="396.0" prefWidth="512.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.igorjmv2000.gmail.aulajpa.gui.ProductRegisterViewController">
+<BorderPane prefHeight="485.0" prefWidth="512.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.igorjmv2000.gmail.aulajpa.gui.ProductRegisterViewController">
    <top>
       <Rectangle height="33.0" smooth="false" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="512.0" BorderPane.alignment="CENTER">
          <fill>
@@ -72,7 +72,7 @@
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Label fx:id="labelNameError" text="Error" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Label fx:id="labelNameError" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="8.0" />
                      </GridPane.margin>
@@ -83,7 +83,7 @@
                         <Insets left="8.0" />
                      </GridPane.margin>
                   </TextField>
-                  <Label fx:id="labelPriceError" text="Error" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Label fx:id="labelPriceError" textFill="RED" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets left="8.0" />
                      </GridPane.margin>
@@ -104,9 +104,9 @@
                   </Button>
                </children>
             </FlowPane>
-            <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="1.7976931348623157E308" prefHeight="119.0" prefWidth="491.0">
+            <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="1.7976931348623157E308" prefHeight="174.0" prefWidth="491.0">
                <content>
-                  <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0">
                     <columns>
                       <TableColumn fx:id="tableColumnCategory" prefWidth="75.0" text="Categoria" />
                       <TableColumn fx:id="tableColumnRemove" prefWidth="75.0" />
