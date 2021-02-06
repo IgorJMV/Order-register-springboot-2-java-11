@@ -10,6 +10,7 @@ import com.igorjmv2000.gmail.aulajpa.config.ConfigTest;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.CategoryDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.ProductDTO;
 import com.igorjmv2000.gmail.aulajpa.services.ProductService;
+import com.igorjmv2000.gmail.aulajpa.services.exceptions.ObjectAssociationException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,11 +21,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -69,7 +72,19 @@ public class ProductViewController implements Initializable{
 
     @FXML
     void onButtonRemoveAction(ActionEvent event) {
-
+    	try {
+    		productService.deleteById(selectedObject.getId());
+    		refreshTable();
+    	}catch(ObjectAssociationException e) {
+    		Alert alert = new Alert(AlertType.INFORMATION);
+    		alert.setTitle("Ação descontinuada");
+    		alert.setHeaderText("Impossível deleter um produto que esteja em um pedido!");
+    		alert.setContentText("O seguinte produto não foi removido: \n"
+    				+ "		Id: " + selectedObject.getId() + "\n"
+    				+ "		Nome: " + selectedObject.getName() + "\n"
+    				+ "		Preço: R$" + String.format("%.2f", selectedObject.getPrice()));
+    		alert.showAndWait();
+    	}
     }
 
     @FXML
@@ -164,6 +179,10 @@ public class ProductViewController implements Initializable{
 			textFieldSelectedObject.setText(selectedObject.getName());
 			buttonRemove.setDisable(false);
 			buttonUpdate.setDisable(false);
+			
+			//listView config
+			ObservableList<CategoryDTO> categories = FXCollections.observableArrayList(selectedObject.getCategories());
+			listView.setItems(categories);
 		}catch(NullPointerException e) {
 			textFieldSelectedObject.clear();
 		}
