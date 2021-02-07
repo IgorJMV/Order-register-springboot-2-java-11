@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.igorjmv2000.gmail.aulajpa.gui.OrderViewController">
+<AnchorPane prefHeight="400.0" prefWidth="845.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.igorjmv2000.gmail.aulajpa.gui.OrderViewController">
    <children>
       <FlowPane alignment="BOTTOM_RIGHT" layoutX="30.0" layoutY="338.0" prefHeight="65.0" prefWidth="600.0" style="-fx-background-color: blue;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <effect>
@@ -75,7 +75,7 @@
       </BorderPane>
       <VBox layoutX="140.0" layoutY="100.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="66.0">
          <children>
-            <TitledPane text="Busca e Filtragem">
+            <TitledPane expanded="false" text="Busca e Filtragem">
                <content>
                   <HBox prefHeight="79.0" prefWidth="819.0">
                      <children>
@@ -147,7 +147,7 @@
                            </padding>
                            <children>
                               <CheckBox fx:id="checkBoxStatusFilter" mnemonicParsing="false" text="Filtrar por status" />
-                              <ComboBox fx:id="comboBoxStatus" disable="true" prefWidth="150.0" />
+                              <ComboBox fx:id="comboBoxStatus" disable="true" prefHeight="26.0" prefWidth="208.0" />
                            </children>
                         </VBox>
                      </children>

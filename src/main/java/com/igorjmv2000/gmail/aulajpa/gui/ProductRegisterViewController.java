@@ -200,7 +200,6 @@ public class ProductRegisterViewController implements Initializable{
 					categories.add(index, event.getNewValue());
 				}
 				
-				System.out.println(categories.size());
 			}
 		});
 		

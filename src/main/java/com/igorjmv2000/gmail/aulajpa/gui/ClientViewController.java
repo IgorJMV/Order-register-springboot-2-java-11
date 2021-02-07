@@ -2,6 +2,7 @@ package com.igorjmv2000.gmail.aulajpa.gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -14,6 +15,7 @@ import com.igorjmv2000.gmail.aulajpa.config.ConfigTest;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.ClientDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.enums.Genre;
 import com.igorjmv2000.gmail.aulajpa.services.ClientService;
+import com.igorjmv2000.gmail.aulajpa.services.exceptions.ObjectAssociationException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,10 +26,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -71,7 +75,22 @@ public class ClientViewController implements Initializable{
 
     @FXML
     void onButtonRemoveAction(ActionEvent event) {
-
+    	try {
+    		clientService.deleteById(selectedObject.getId());
+    		refreshTable();
+    	}catch(ObjectAssociationException e) {
+    		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    		Alert alert = new Alert(AlertType.INFORMATION);
+    		alert.setTitle("Ação descontinuada");
+    		alert.setHeaderText("Impossível deleter cliente que contenha pedidos!");
+    		alert.setContentText("O seguinte cliente não foi removido: \n"
+    				+ "		Id: " + selectedObject.getId() + "\n"
+    				+ "		Nome: " + selectedObject.getName() + "\n"
+    				+ "		Nascimento: " + df.format(selectedObject.getBirthDate()) + "\n"
+    				+ "		Gênero: " + selectedObject.getGenre().getDescription()
+    		);
+    		alert.showAndWait();
+    	}
     }
 
     @FXML

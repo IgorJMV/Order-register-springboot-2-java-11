@@ -5,12 +5,14 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.igorjmv2000.gmail.aulajpa.domain.Client;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.ClientDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.OrderDTO;
 import com.igorjmv2000.gmail.aulajpa.repositories.ClientRepository;
+import com.igorjmv2000.gmail.aulajpa.services.exceptions.ObjectAssociationException;
 import com.igorjmv2000.gmail.aulajpa.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -63,7 +65,11 @@ public class ClientService {
 	
 	public void deleteById(Integer id) {
 		findById(id);
-		clientRepository.deleteById(id);
+		try {
+			clientRepository.deleteById(id);
+		}catch(DataIntegrityViolationException e) {
+			throw new ObjectAssociationException("this client contains orders");
+		}
 	}
 	
 	protected static Client fromEntity(ClientDTO dto) {
