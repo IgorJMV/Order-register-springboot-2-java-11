@@ -30,4 +30,9 @@ public enum OrderStatus {
 		
 		throw new IllegalArgumentException("Invalid cod: " + cod);
 	}
+	
+	@Override
+	public String toString() {
+		return description;
+	}
 }

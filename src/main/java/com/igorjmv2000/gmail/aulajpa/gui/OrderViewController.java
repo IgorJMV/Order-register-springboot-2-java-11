@@ -1,6 +1,8 @@
 package com.igorjmv2000.gmail.aulajpa.gui;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -10,7 +12,6 @@ import com.igorjmv2000.gmail.aulajpa.config.ConfigTest;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.ClientDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.OrderDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.enums.OrderStatus;
-import com.igorjmv2000.gmail.aulajpa.gui.util.Constraints;
 import com.igorjmv2000.gmail.aulajpa.services.OrderService;
 
 import javafx.beans.value.ChangeListener;
@@ -57,7 +58,7 @@ public class OrderViewController implements Initializable{
     @FXML private DatePicker datePickerInitial;
     @FXML private DatePicker datePickerFinal;
 
-    @FXML private ComboBox<?> checkBoxStatus;
+    @FXML private ComboBox<OrderStatus> comboBoxStatus;
 
     @FXML private Button buttonBack;
     @FXML private Button buttonRegister;
@@ -161,8 +162,108 @@ public class OrderViewController implements Initializable{
 			}
 			tableView.setItems(FXCollections.observableArrayList(newList));
 		});
+		
+		//filters (time)
+		checkBoxTimeFilter.selectedProperty().addListener((obs, oldVal, newVal) -> {
+			if(newVal && !checkBoxStatusFilter.isSelected()) {
+				datePickerInitial.setDisable(false);
+				datePickerFinal.setDisable(false);
+				filterByTime();
+			} else if(newVal && checkBoxStatusFilter.isSelected()) {
+				datePickerInitial.setDisable(false);
+				datePickerFinal.setDisable(false);
+				filterByTimeAndStatus();
+			} else if (!newVal && checkBoxStatusFilter.isSelected()) {
+				datePickerInitial.setDisable(true);
+				datePickerFinal.setDisable(true);
+				filterByStatus();
+			} else {
+				refreshTable();
+				datePickerInitial.setDisable(true);
+				datePickerFinal.setDisable(true);
+			}
+		});
+		datePickerInitial.valueProperty().addListener((obs, oldVal, newVal) -> {
+			filterByTime();
+		});
+		datePickerFinal.valueProperty().addListener((obs, oldVal, newVal) -> {
+			filterByTime();
+		});
+		
+		//filters (status)
+		ObservableList<OrderStatus> obsComboList = FXCollections.observableArrayList(OrderStatus.values());
+		comboBoxStatus.setItems(obsComboList);
+		comboBoxStatus.getSelectionModel().clearAndSelect(0);
+		comboBoxStatus.valueProperty().addListener((obs, oldVal, newVal) -> {
+			filterByStatus();
+		});
+		checkBoxStatusFilter.selectedProperty().addListener((obs, oldVal, newVal) -> {
+			if(newVal && !checkBoxTimeFilter.isSelected()) {
+				filterByStatus();
+				comboBoxStatus.setDisable(false);
+			} else if (newVal && checkBoxTimeFilter.isSelected()) {
+				filterByTimeAndStatus();
+				comboBoxStatus.setDisable(false);
+			} else if (!newVal && checkBoxTimeFilter.isSelected()) {
+				comboBoxStatus.setDisable(true);
+				filterByTime();
+			} else {
+				refreshTable();
+				comboBoxStatus.setDisable(true);
+			}
+		});
 	}
 	
+	private void filterByTimeAndStatus() {
+		try {
+			Date initialDate = Date.from(datePickerInitial.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			Date finalDate = Date.from(datePickerFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			
+			validateDates(initialDate, finalDate);
+			
+			List<OrderDTO> newList = orderService.findAll().stream().filter(o -> 
+				o.getMoment().getTime() >= initialDate.getTime() && o.getMoment().getTime() <= finalDate.getTime()
+				&&
+				o.getStatus().equals(comboBoxStatus.getValue())
+			).collect(Collectors.toList());
+			tableView.setItems(FXCollections.observableArrayList(newList));
+		}catch(NullPointerException e) {
+			
+		}catch(IllegalArgumentException e) {
+			LocalDate aux = datePickerInitial.getValue();
+			datePickerInitial.setValue(datePickerFinal.getValue());
+			datePickerFinal.setValue(aux);
+		}
+	}
+
+	private void filterByStatus() {
+		List<OrderDTO> newList = orderService.findAll().stream().filter(o -> o.getStatus().equals(comboBoxStatus.getValue())).collect(Collectors.toList());
+		tableView.setItems(FXCollections.observableArrayList(newList));
+	}
+
+	private void filterByTime() {
+		try {
+			Date initialDate = Date.from(datePickerInitial.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			Date finalDate = Date.from(datePickerFinal.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+			
+			validateDates(initialDate, finalDate);
+			
+			List<OrderDTO> newList = orderService.findAll().stream().filter(o -> o.getMoment().getTime() >= initialDate.getTime() && o.getMoment().getTime() <= finalDate.getTime()).collect(Collectors.toList());
+			tableView.setItems(FXCollections.observableArrayList(newList));
+		}catch(NullPointerException e) {
+			
+		}catch(IllegalArgumentException e) {
+			LocalDate aux = datePickerInitial.getValue();
+			datePickerInitial.setValue(datePickerFinal.getValue());
+			datePickerFinal.setValue(aux);
+		}
+	}
+
+	private void validateDates(Date initialDate, Date finalDate) {
+		if((finalDate.getTime() - initialDate.getTime()) < 0)
+			throw new IllegalArgumentException("End date must be greater than the start date");
+	}
+
 	private void updateSelectedObject(Event event) {
 		try {
 			selectedObject = tableView.getSelectionModel().getSelectedItem();

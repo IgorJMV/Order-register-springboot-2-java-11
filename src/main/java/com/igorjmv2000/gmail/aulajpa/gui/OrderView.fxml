@@ -75,7 +75,7 @@
       </BorderPane>
       <VBox layoutX="140.0" layoutY="100.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="65.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="66.0">
          <children>
-            <TitledPane expanded="false" text="Busca e Filtragem">
+            <TitledPane text="Busca e Filtragem">
                <content>
                   <HBox prefHeight="79.0" prefWidth="819.0">
                      <children>
@@ -147,7 +147,7 @@
                            </padding>
                            <children>
                               <CheckBox fx:id="checkBoxStatusFilter" mnemonicParsing="false" text="Filtrar por status" />
-                              <ComboBox fx:id="checkBoxStatus" disable="true" prefWidth="150.0" />
+                              <ComboBox fx:id="comboBoxStatus" disable="true" prefWidth="150.0" />
                            </children>
                         </VBox>
                      </children>
@@ -191,7 +191,7 @@
                            </padding>
                            <children>
                               <Label text="Pedido selecionado:" />
-                              <TextField fx:id="textFieldSelectedObject" alignment="CENTER" promptText="Pedido Selecionado" />
+                              <TextField fx:id="textFieldSelectedObject" alignment="CENTER" editable="false" promptText="Pedido Selecionado" />
                            </children>
                         </VBox>
                      </children>
