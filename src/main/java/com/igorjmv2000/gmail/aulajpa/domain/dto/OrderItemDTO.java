@@ -89,5 +89,8 @@ public class OrderItemDTO implements Serializable{
 		return true;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "(" + quantity + "x) " + getProduct().getName() + " [R$" + String.format("%.2f", price()) + "]";
+	}
 }

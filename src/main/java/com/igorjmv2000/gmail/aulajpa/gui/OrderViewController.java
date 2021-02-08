@@ -1,6 +1,8 @@
 package com.igorjmv2000.gmail.aulajpa.gui;
 
+import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -11,7 +13,9 @@ import java.util.stream.Collectors;
 import com.igorjmv2000.gmail.aulajpa.config.ConfigTest;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.ClientDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.OrderDTO;
+import com.igorjmv2000.gmail.aulajpa.domain.dto.OrderItemDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.enums.OrderStatus;
+import com.igorjmv2000.gmail.aulajpa.services.OrderItemService;
 import com.igorjmv2000.gmail.aulajpa.services.OrderService;
 
 import javafx.beans.value.ChangeListener;
@@ -20,9 +24,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -37,11 +46,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class OrderViewController implements Initializable{
 	private Node leadingUpNode;
 	
 	private OrderService orderService = ConfigTest.getStaticOrderService();
+	
+	private OrderItemService orderItemService = ConfigTest.getStaticOrderItemService();
 	
 	private OrderDTO selectedObject;
 	
@@ -86,17 +99,31 @@ public class OrderViewController implements Initializable{
     
     @FXML
     void onButtonRegisterAction(ActionEvent event) {
-
+    	openNewModalView("OrderRegisterView.fxml", event);
     }
 
     @FXML
     void onButtonRemoveAction(ActionEvent event) {
-
+    	Alert alert = new Alert(AlertType.CONFIRMATION);
+    	alert.setTitle("Confirme para prosseguir");
+    	alert.setHeaderText("Você está prestes a deletar o pedido abaixo. Quer continuar?");
+    	alert.setContentText("Id: " + selectedObject.getId() + "\n"
+    						+ "Feito por: " + selectedObject.getClient().getName() + "\n"
+    						+ "Status: " + selectedObject.getStatus().getDescription());
+    	ButtonType type = alert.showAndWait().get();
+    	
+    	if(type.equals(ButtonType.OK)) {
+    		for(OrderItemDTO dto : selectedObject.getItems()) {
+    			orderItemService.delete(dto);
+    		}
+    		orderService.deleteById(selectedObject.getId());
+    		refreshTable();
+    	}
     }
 
     @FXML
     void onButtonUpdateAction(ActionEvent event) {
-
+    	openNewModalView("OrderRegisterView.fxml", event);
     }
     
     @FXML
@@ -113,6 +140,45 @@ public class OrderViewController implements Initializable{
     
     public void setLeadingUpNode(Node node) {
     	leadingUpNode = node;
+    }
+    
+    private void openNewModalView(String name, ActionEvent event) {
+    	try {
+    		FXMLLoader loader = new FXMLLoader(getClass().getResource(name));
+    		BorderPane root = loader.load();    		
+    		Scene scene = new Scene(root);
+    		Stage stage = new Stage();
+    		stage.setScene(scene);
+    		
+    		OrderRegisterViewController controller = (OrderRegisterViewController)loader.getController();
+    		if(event.getSource().equals(buttonRegister)) {
+    			controller.setRegister(true);
+    			stage.setTitle("Registrar novo pedido");
+    		}else if(event.getSource().equals(buttonUpdate)) {
+    			controller.setRegister(false);
+    			stage.setTitle("Atualizar pedido");
+    			
+    			//set selectedObject
+    			controller.getTextFieldId().setText(String.valueOf(selectedObject.getId()));
+    			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    			controller.getTextFieldMoment().setText(df.format(selectedObject.getMoment()));
+    			controller.getComboBoxStatus().getSelectionModel().clearAndSelect(selectedObject.getStatus().getCod()-1);
+    			controller.setClient(selectedObject.getClient());
+    			controller.getTextFieldClient().setText(selectedObject.getClient().getName());
+    			ObservableList<OrderItemDTO> obsList = FXCollections.observableArrayList(selectedObject.getItems());
+    			controller.getListViewProduct().getItems().addAll(obsList);
+    			controller.updateTotalPrice();
+    			
+    		}
+    		controller.updateContextMenuProduct();    		
+    		stage.initOwner(buttonRegister.getParent().getScene().getWindow());
+    		stage.initModality(Modality.APPLICATION_MODAL);
+    		stage.setResizable(false);
+    		stage.setOnHiding(e -> refreshTable());
+    		stage.showAndWait();
+    	}catch(IOException e) {
+    		e.printStackTrace();
+    	}
     }
     
     private void refreshTable() {
