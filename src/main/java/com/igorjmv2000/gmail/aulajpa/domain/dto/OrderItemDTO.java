@@ -61,7 +61,7 @@ public class OrderItemDTO implements Serializable{
 	}
 	
 	public Double price() {
-		return getProduct().getPrice() * quantity;
+		return price * quantity;
 	}
 
 	@Override

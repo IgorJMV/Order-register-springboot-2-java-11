@@ -1,7 +1,5 @@
 package com.igorjmv2000.gmail.aulajpa.config;
 
-import java.text.SimpleDateFormat;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -42,8 +40,6 @@ public class ConfigTest implements CommandLineRunner{
 	
 	@Override
 	public void run(String... args) throws Exception {
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		
 		staticClientService = clientService;
 		staticProductService = productService;
 		staticCategoryService = categoryService;
