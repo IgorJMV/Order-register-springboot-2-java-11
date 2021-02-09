@@ -15,6 +15,7 @@ import com.igorjmv2000.gmail.aulajpa.domain.dto.ClientDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.OrderDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.dto.OrderItemDTO;
 import com.igorjmv2000.gmail.aulajpa.domain.enums.OrderStatus;
+import com.igorjmv2000.gmail.aulajpa.gui.util.OrderItemDetails;
 import com.igorjmv2000.gmail.aulajpa.services.OrderItemService;
 import com.igorjmv2000.gmail.aulajpa.services.OrderService;
 
@@ -44,6 +45,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -196,6 +198,13 @@ public class OrderViewController implements Initializable{
 		buttonBack.setGraphic(imgView);
 		
 		//tableView config
+		tableView.setOnMouseClicked(event -> {
+			if(event.getButton().equals(MouseButton.PRIMARY)) {
+				if(event.getClickCount() == 2) {
+					openOrderDetails(event);
+				}
+			}
+		});
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumnMoment.setCellValueFactory(new PropertyValueFactory<>("moment"));
 		tableColumnStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -280,6 +289,47 @@ public class OrderViewController implements Initializable{
 		});
 	}
 	
+	private void openOrderDetails(MouseEvent event) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("OrderDetailsView.fxml"));
+			BorderPane root = loader.load();
+			Scene scene = new Scene(root);
+			
+			Stage stage = new Stage();
+			stage.setScene(scene);
+			stage.initOwner(buttonRegister.getScene().getWindow());
+			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.setTitle("Detalhes do pedido");
+			
+			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			SimpleDateFormat df2 = new SimpleDateFormat("dd/MM/yyyy");
+			OrderDetailsViewController controller = loader.getController();
+			controller.getTextFieldId().setText(String.valueOf(selectedObject.getId()));
+			controller.getTextFieldMoment().setText(df.format(selectedObject.getMoment()));
+			controller.getTextFieldStatus().setText(selectedObject.getStatus().getDescription());
+			
+			//table view client
+			ClientDTO client = selectedObject.getClient();
+			controller.getTextFieldClientId().setText(String.valueOf(client.getId()));
+			controller.getTextFieldClientName().setText(client.getName());
+			controller.getTextFieldClientBirthDate().setText(df2.format(client.getBirthDate()));
+			controller.getTextFieldClientGenre().setText(client.getGenre().getDescription());
+			
+			//table View orderItem
+			ObservableList<OrderItemDetails> obsListOrderItem = FXCollections.observableArrayList(selectedObject.getItems().stream().map(
+					oi -> new OrderItemDetails(oi.getProduct().getId(), oi.getProduct().getName(), oi.getPrice(), oi.getQuantity(), oi.price())
+			).collect(Collectors.toList()));
+			controller.getTableViewOrderItem().setItems(obsListOrderItem);
+			
+			//total value
+			controller.getLabelTotalPrice().setText(String.format("R$%.2f", selectedObject.totalPrice()));
+			
+			stage.showAndWait();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void filterByTimeAndStatus() {
 		try {
 			Date initialDate = Date.from(datePickerInitial.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());

@@ -35,6 +35,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -227,6 +228,8 @@ public class OrderRegisterViewController implements Initializable{
 			textFieldSelectedProduct.setText(listViewSelectedObject.getProduct().getName());
 			if(listViewSelectedObject.getQuantity().intValue() > 1)
 				buttonDecreaseProduct.setDisable(false);
+			else
+				buttonDecreaseProduct.setDisable(true);
 			buttonMoreProduct.setDisable(false);
 			buttonRemoveProduct.setDisable(false);
 			textFieldQuantityProduct.setText(String.valueOf(listViewSelectedObject.getQuantity()));
@@ -338,6 +341,13 @@ public class OrderRegisterViewController implements Initializable{
 		
 		//ListView selected Object
 		listViewProduct.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+			try {
+				setSelected(true);
+			}catch(NullPointerException e) {
+				setSelected(false);
+			}
+		});
+		listViewProduct.addEventFilter(KeyEvent.ANY, event -> {
 			try {
 				setSelected(true);
 			}catch(NullPointerException e) {
